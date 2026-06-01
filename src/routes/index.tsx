@@ -62,7 +62,7 @@ function useScrolled(threshold = 80) {
 }
 
 function Index() {
-  const scrolled = useScrolled(window?.innerHeight ? window.innerHeight - 100 : 600);
+  const scrolled = useScrolled(600);
   const r1 = useReveal<HTMLDivElement>();
   const r2 = useReveal<HTMLDivElement>();
   const r3 = useReveal<HTMLDivElement>();
