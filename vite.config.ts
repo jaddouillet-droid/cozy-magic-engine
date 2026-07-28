@@ -31,9 +31,10 @@ export default defineConfig(({ mode, command }) => {
   if (command === "build") {
     plugins.push(
       nitro({
-        preset: "github-pages",
+        preset: "static",
         prerender: {
           crawlLinks: true,
+          failOnError: false,
         },
       }),
     );
