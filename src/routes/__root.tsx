@@ -7,11 +7,9 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
-
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -37,10 +35,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
@@ -84,11 +78,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "KRAFTY décroche, qualifie, chiffre, facture et relance pour les artisans du bâtiment. 24/7. Hébergé en France." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "KRAFTY — L'assistant des artisans qui ne rate jamais un chantier" },
       { name: "twitter:description", content: "KRAFTY décroche, qualifie, chiffre, facture et relance pour les artisans du bâtiment. 24/7. Hébergé en France." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/38c7d4a0-9238-4e2e-8150-8ffea44726b1/id-preview-06c0e6f0--c63c896b-85ec-4fe1-8d75-5cbb3cc1b92d.lovable.app-1780185433792.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/38c7d4a0-9238-4e2e-8150-8ffea44726b1/id-preview-06c0e6f0--c63c896b-85ec-4fe1-8d75-5cbb3cc1b92d.lovable.app-1780185433792.png" },
+      { property: "og:image", content: "/favicon.ico" },
+      { name: "twitter:image", content: "/favicon.ico" },
     ],
     links: [
       {
