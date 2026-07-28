@@ -24,9 +24,22 @@ jobs:
       - run: bun run build
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
+      - name: Prepare static site artifact
+        run: |
+          if [ -d dist/client ]; then SITE=dist/client
+          elif [ -d dist ]; then SITE=dist
+          elif [ -d .output/public ]; then SITE=.output/public
+          else
+            echo "No build output directory found"
+            find . -name index.html -not -path './node_modules/*' | head
+            exit 1
+          fi
+          echo "SITE=$SITE" >> "$GITHUB_ENV"
+          if [ -f "$SITE/index.html" ]; then cp "$SITE/index.html" "$SITE/404.html"; fi
+          if [ -f "$SITE/_shell.html" ] && [ ! -f "$SITE/index.html" ]; then cp "$SITE/_shell.html" "$SITE/index.html"; cp "$SITE/_shell.html" "$SITE/404.html"; fi
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .output/public
+          path: ${{ env.SITE }}
 
   deploy:
     needs: build

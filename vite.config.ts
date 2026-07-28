@@ -3,44 +3,14 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import tsConfigPaths from "vite-tsconfig-paths";
-import { nitro } from "nitro/vite";
 
 const repoName = process.env.GITHUB_REPOSITORY?.split("/")[1];
 
-export default defineConfig(({ mode, command }) => {
+export default defineConfig(({ mode }) => {
   const envDefine: Record<string, string> = {};
   for (const [key, value] of Object.entries(loadEnv(mode, process.cwd(), "VITE_"))) {
     envDefine[`import.meta.env.${key}`] = JSON.stringify(value);
   }
-
-  const plugins = [
-    tailwindcss(),
-    tsConfigPaths({ projects: ["./tsconfig.json"] }),
-    tanstackStart({
-      importProtection: {
-        behavior: "error",
-        client: {
-          files: ["**/server/**"],
-          specifiers: ["server-only"],
-        },
-      },
-      server: { entry: "server" },
-    }),
-  ];
-
-  if (command === "build") {
-    plugins.push(
-      nitro({
-        preset: "static",
-        prerender: {
-          crawlLinks: true,
-          failOnError: false,
-        },
-      }),
-    );
-  }
-
-  plugins.push(viteReact());
 
   return {
     base: repoName ? `/${repoName}/` : "/",
@@ -68,6 +38,26 @@ export default defineConfig(({ mode, command }) => {
       ignoreOutdatedRequests: true,
     },
     server: { host: "::", port: 8080 },
-    plugins,
+    plugins: [
+      tailwindcss(),
+      tsConfigPaths({ projects: ["./tsconfig.json"] }),
+      tanstackStart({
+        importProtection: {
+          behavior: "error",
+          client: {
+            files: ["**/server/**"],
+            specifiers: ["server-only"],
+          },
+        },
+        server: { entry: "server" },
+        spa: {
+          enabled: true,
+          prerender: {
+            crawlLinks: true,
+          },
+        },
+      }),
+      viteReact(),
+    ],
   };
 });
